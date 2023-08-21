@@ -1,0 +1,93 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(lme4)
+```
+
+# Sleep Study
+
+```{r}
+data("sleepstudy")
+```
+
+```{r}
+sleepstudy
+```
+
+```{r}
+sleepstudy %>%
+  ggplot() + 
+    geom_point(aes(x = Days, y = Reaction, color = Subject))
+```
+
+```{r}
+sleepstudy %>%
+  ggplot() + 
+    geom_point(aes(x = Days, y = Reaction)) +
+    facet_wrap(~Subject)
+```
+
+```{r}
+sleepstudy_mixed <- lmer(Reaction ~ Days + (Days | Subject), data = sleepstudy)
+sleepstudy_mixed %>% summary()
+```
+
+```{r}
+sleepstudy_mixed %>% confint()
+```
+
+```{r}
+sleepstudy_mixed %>% ranef()
+```
+# Chicken Weights
+
+```{r}
+ChickWeight
+```
+
+```{r}
+chickenweights_mixed_multi <- lmer(weight ~ Time*Diet + (Time | Chick), data = ChickWeight)
+chickenweights_mixed_multi %>% summary()
+```
+
+```{r}
+chickenweights_mixed_uni <- lmer(weight ~ Time + (Time | Chick), data = ChickWeight)
+chickenweights_mixed_uni %>% summary()
+```
+
+```{r}
+anova(chickenweights_mixed_uni, chickenweights_mixed_multi)
+```
+# Penicillin
+
+```{r}
+data("Penicillin")
+Penicillin
+```
+
+```{r}
+penicillin_mixed <- lmer(diameter ~ 1 + (1 | plate) + (1 | sample), data = Penicillin)
+penicillin_mixed %>% summary()
+```
+
+# Pastes
+
+```{r}
+data("Pastes")
+Pastes
+```
+
+```{r}
+pastes_mixed <- lmer(strength ~ 1 + (1 | batch) + (1 | sample), data = Pastes)
+pastes_mixed %>% summary()
+```
+
+
+
+
+
+
